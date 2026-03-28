@@ -5,37 +5,42 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Datos en memoria
-let generos = [];
+// Base de datos temporal
 let peliculas = [];
 
-// RUTAS GENEROS
-app.get("/api/generos", (req, res) => {
-  res.json(generos);
+// Ruta principal
+app.get("/", (req, res) => {
+  res.send("Backend funcionando");
 });
 
-app.post("/api/generos", (req, res) => {
-  const genero = req.body;
-  generos.push(genero);
-  res.json(genero);
-});
-
-// RUTAS PELICULAS
+// VER películas
 app.get("/api/peliculas", (req, res) => {
   res.json(peliculas);
 });
 
+// CREAR película
 app.post("/api/peliculas", (req, res) => {
-  const pelicula = req.body;
-  peliculas.push(pelicula);
-  res.json(pelicula);
+  const nueva = req.body;
+  peliculas.push(nueva);
+  res.json(nueva);
 });
 
-// PRUEBA
-app.get("/", (req, res) => {
-  res.send("Backend funcionando 🚀");
+// ACTUALIZAR
+app.put("/api/peliculas/:id", (req, res) => {
+  const id = req.params.id;
+  peliculas[id] = req.body;
+  res.json(peliculas[id]);
 });
 
-app.listen(3000, () => {
-  console.log("Servidor corriendo en puerto 3000");
+// ELIMINAR
+app.delete("/api/peliculas/:id", (req, res) => {
+  const id = req.params.id;
+  peliculas.splice(id, 1);
+  res.json({ mensaje: "Eliminada" });
+});
+
+// IMPORTANTE PARA RENDER
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Servidor corriendo");
 });
